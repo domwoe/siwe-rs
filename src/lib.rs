@@ -26,6 +26,7 @@ mod eip1271;
 #[cfg(feature = "random")]
 mod nonce;
 mod rfc3339;
+#[cfg(feature = "random")]
 pub use nonce::generate_nonce;
 pub use rfc3339::TimeStamp;
 
