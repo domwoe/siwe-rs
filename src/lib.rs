@@ -23,6 +23,7 @@ use time::OffsetDateTime;
 
 #[cfg(feature = "ethers")]
 mod eip1271;
+#[cfg(feature = "random")]
 mod nonce;
 mod rfc3339;
 pub use nonce::generate_nonce;
