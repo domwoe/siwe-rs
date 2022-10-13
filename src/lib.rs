@@ -311,9 +311,9 @@ pub struct VerificationOpts {
 #[derive(Error, Debug)]
 /// Reasons for the verification of a signed message to fail.
 pub enum VerificationError {
-    #[error(transparent)]
+    #[error("Signature error")]
     /// Signature is not a valid k256 signature (it can be returned if the contract wallet verification failed or is not enabled).
-    Crypto(#[from] k256::ecdsa::Error),
+    Crypto(String),
     #[error(transparent)]
     /// Message failed to be serialized.
     Serialization(#[from] fmt::Error),
@@ -371,8 +371,8 @@ impl Message {
             elliptic_curve::sec1::ToEncodedPoint,
         };
         use sha3::{Digest, Keccak256};
-        let pk = Signature::new(&Sig::from_bytes(&sig[..64])?, Id::new(&sig[64] % 27)?)?
-            .recover_verifying_key(&self.eip191_bytes()?)?;
+        let pk = Signature::new(&Sig::from_bytes(&sig[..64]).unwrap(), Id::new(&sig[64] % 27).unwrap()).unwrap()
+            .recover_verifying_key(&self.eip191_bytes()?).unwrap();
 
         if Keccak256::default()
             .chain_update(&pk.to_encoded_point(false).as_bytes()[1..])
